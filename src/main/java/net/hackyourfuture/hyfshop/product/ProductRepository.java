@@ -63,8 +63,11 @@ public class ProductRepository {
     }
 
     public List<Product> findByColor(String color) {
-        // TODO: Implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        return jdbcClient
+                .sql("SELECT * FROM products WHERE details @> CAST(? AS jsonb)")
+                .param("{\"color\": \"" + color + "\"}")
+                .query(PRODUCT_ROW_MAPPER)
+                .list();
     }
 
     public Product setSize(int id, String size) {
